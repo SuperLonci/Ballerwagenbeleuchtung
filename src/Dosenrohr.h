@@ -9,6 +9,7 @@ class Dosenrohr {
             this->setup();
         }
 
+
         void acceleration(){
             for (int i = 0; i < NUM_LEDS; i++) {
                 leds[i] = CRGB::BlueViolet;
@@ -24,6 +25,7 @@ class Dosenrohr {
             delay(300);
         }
 
+
         void shine(){
             for (int i = 0; i < NUM_LEDS; i++)
             {
@@ -31,9 +33,11 @@ class Dosenrohr {
             }
             FastLED.show();
             delay(500);
+            // for blink
             // clear();
             // delay(500);
         }
+
 
         void bouncingColoredBalls(int BallCount, byte colors[][3]) {
             float Gravity = -9.81;
@@ -88,6 +92,7 @@ class Dosenrohr {
             }
         }
 
+
         void runningLightGroup(byte red, byte green, byte blue, int WaveDelay) {
 
             int Position=0;
@@ -109,6 +114,7 @@ class Dosenrohr {
                 delay(WaveDelay);
             }
         }
+
 
         void Fire(int Cooling, int Sparking, int SpeedDelay) {
             static byte heat[NUM_LEDS];
@@ -147,6 +153,35 @@ class Dosenrohr {
         }
 
 
+        void meteorRain(byte red, byte green, byte blue, byte meteorSize, byte meteorTrailDecay, boolean meteorRandomDecay, int SpeedDelay) {  
+            setAll(0,0,0);
+            
+            for(int i = 0; i < NUM_LEDS+NUM_LEDS; i++) {
+            
+            
+                // fade brightness all LEDs one step
+                for(int j=0; j<NUM_LEDS; j++) {
+                    if( (!meteorRandomDecay) || (random(10)>5) ) {      
+                        leds[j].fadeToBlackBy( meteorTrailDecay );
+                    }
+                }
+            
+                // draw meteor
+                for(int j = 0; j < meteorSize; j++) {
+                    if( ( i-j <NUM_LEDS) && (i-j>=0) ) {
+                        // setPixel(i-j, red, green, blue);
+                        leds[i-j].r = red;
+                        leds[i-j].g = green;
+                        leds[i-j].b = blue;
+                    }
+                }
+            
+                FastLED.show();
+                delay(SpeedDelay);
+            }
+        }
+
+
     private:
         void setup(){
             leds = new CRGB[NUM_LEDS];
@@ -158,6 +193,15 @@ class Dosenrohr {
             {
                 leds[i] = CRGB::Black;
             }
+        }
+
+        void setAll(byte red, byte green, byte blue) {
+            for(int i = 0; i < NUM_LEDS; i++ ) {
+                leds[i].r = red;
+                leds[i].g = green;
+                leds[i].b = blue;
+            }
+            FastLED.show();
         }
 
         void setPixelHeatColor (int Pixel, byte temperature) {
@@ -185,7 +229,5 @@ class Dosenrohr {
                 leds[Pixel].g = 0;
                 leds[Pixel].b = 0;
             }
-        }
-
-        
+        }      
 };

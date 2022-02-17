@@ -1,15 +1,22 @@
 #include <Arduino.h>
 #include <FastLED.h>
+#include <LEDMatrix.h>
+#include <LEDSprites.h>
+#include <Adafruit_I2CDevice.h>
+#include <Adafruit_GFX.h>
 #include "Dosenrohr.h"
 #include "Unterboden.h"
+#include "Matrix.h"
 
 
 #define LED_PIN_Rohr_1 27
 #define LED_PIN_Rohr_2 32
-#define LED_PIN_Unterboden 33
+// #define LED_PIN_Unterboden 33
+#define LED_PIN_Matrix_1 33
 #define NUM_LEDS_Rohr_1 33
 #define NUM_LEDS_Rohr_2 33
 #define NUM_LEDS_Unterboden 64
+
 
 byte colors[3][3] = { {0xff,    0,    0},
                       {0xff, 0xff, 0xff},
@@ -22,7 +29,8 @@ void Thread3(void *);
 // Instanzen der Klassen erstellen
 auto rohr1 = new Dosenrohr<LED_PIN_Rohr_1, NUM_LEDS_Rohr_1>();
 auto rohr2 = new Dosenrohr<LED_PIN_Rohr_2, NUM_LEDS_Rohr_2>();
-auto unterboden = new Unterboden<LED_PIN_Unterboden, NUM_LEDS_Unterboden>();
+// auto unterboden = new Unterboden<LED_PIN_Unterboden, NUM_LEDS_Unterboden>();
+auto matrix1 = new Matrix<LED_PIN_Matrix_1>();
 
 // Dosenrohr<LED_PIN_Rohr_2, NUM_LEDS_Rohr_2> rohr2;
 // // Dosenrohr<LED_PIN_Rohr_3, NUM_LEDS_Rohr_3> rohr3 = Dosenrohr<LED_PIN_Rohr_3, NUM_LEDS_Rohr_3>();
@@ -33,7 +41,9 @@ void setup () {
 
   Serial.begin(9600);
 
-  FastLED.setBrightness(100);
+  FastLED.setBrightness(32);
+  FastLED.clear(true);
+  FastLED.show();
 
    xTaskCreate(
     Thread1,    // Function that should be called
@@ -56,7 +66,7 @@ void setup () {
   xTaskCreate(
     Thread3,    // Function that should be called
     "Task 3",   // Name of the task (for debugging)
-    1500,            // Stack size (bytes)
+    6000,            // Stack size (bytes)
     NULL,            // Parameter to pass
     3,               // Task priority
     NULL             // Task handle
@@ -87,7 +97,8 @@ void Thread2(void * parameter){
 
     // rohr2->shine();
     // rohr2->acceleration();
-    rohr2->bouncingColoredBalls(3, colors);
+    // rohr2->bouncingColoredBalls(3, colors);
+    rohr2->meteorRain(0xff,0xff,0xff,10, 64, true, 30);
 
   }
 }
@@ -95,7 +106,17 @@ void Thread2(void * parameter){
 void Thread3(void * parameter){
   for(;;){
 
-    unterboden->acceleration();
+    // matrix1->stripedRainbow();
+    matrix1->loop();
     
   }
 }
+
+// void Thread4(void * parameter){
+//   for(;;){
+
+//     // unterboden->dualColorRangeRotation();
+//     // unterboden->regenbogen(20);
+    
+//   }
+// }

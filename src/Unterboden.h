@@ -31,23 +31,22 @@ class Unterboden {
             delay(300);
         }
 
-        // alter code
-        // dualColorRangeRotation();
-        // offset++;
-        // if (offset > LED_COUNT)
-        //     offset = 0;
-
-        // currentPixelHue += 64;
-        // if (currentPixelHue >= 65536)
-        //     currentPixelHue = 0;
 
         void dualColorRangeRotation() {
 
-            while (offset <= NUM_LEDS){
-                while (currentPixelHue < 65536){
+            offset++;
+            if (offset > NUM_LEDS)
+                offset = 0;
+
+            currentPixelHue += 64;
+            if (currentPixelHue >= 65536)
+                currentPixelHue = 0;
+
+            // while (offset < NUM_LEDS){
+            //     while (currentPixelHue < 65536){
 
                     for (int i = 0; i < NUM_LEDS; i++) {
-                        leds[i] = CRGB::AliceBlue; //currentPixelHue; //CHSV(currentPixelHue,255,64) //HSVHue::HUE_GREEN; // currentPixelHue;
+                        leds[i] = CRGB::OrangeRed; //currentPixelHue; //CHSV(currentPixelHue,255,64) //HSVHue::HUE_GREEN; // currentPixelHue;
 
                         // strip.setPixelColor(i, strip.gamma32(strip.ColorHSV(currentPixelHue)));
 
@@ -59,7 +58,7 @@ class Unterboden {
                         if (pos >= NUM_LEDS)
                         pos = (i + offset) - NUM_LEDS;
 
-                        leds[pos] = CRGB::Amethyst; //(currentPixelHue + 65536 / 2) % 65536;
+                        leds[pos] = CRGB::GreenYellow; //(currentPixelHue + 65536 / 2) % 65536;
 
                         // strip.setPixelColor(pos, strip.gamma32(strip.ColorHSV((currentPixelHue + 65536 / 2) % 65536)));
                         // strip.setPixelColor(pos, strip.gamma32(strip.ColorHSV(65536 - currentPixelHue))); //alt idk
@@ -70,10 +69,31 @@ class Unterboden {
                     currentPixelHue += 64;
                     offset++;
 
+            //     }
+            //     currentPixelHue = 0;
+            // }
+            // offset = 0;
+        }
+
+        void regenbogen_cycle(int SpeedDelay){
+            byte *c;
+            uint16_t i, j;
+
+            for(j=0; j<256*5; j++) { // 5 cycles of all colors on wheel
+                for(i=0; i< NUM_LEDS; i++) {
+                    c=Wheel(((i * 256 / NUM_LEDS) + j) & 255);
+                    // setPixel(i, *c, *(c+1), *(c+2));
+                    leds[i].r = *c;
+                    leds[i].g = *(c+1);
+                    leds[i].b = *(c+2);
                 }
-                currentPixelHue = 0;
+                FastLED.show();
+                delay(SpeedDelay);
             }
-            offset = 0;
+        }
+
+        void regenbogen(int SpeedDelay){
+            //tbw
         }
 
 
@@ -83,5 +103,25 @@ class Unterboden {
                 FastLED.addLeds<NEOPIXEL, LED_PIN>(leds, NUM_LEDS);
             }
 
+        byte * Wheel(byte WheelPos) {
+            static byte c[3];
+            
+            if(WheelPos < 85) {
+                c[0]=WheelPos * 3;
+                c[1]=255 - WheelPos * 3;
+                c[2]=0;
+            } else if(WheelPos < 170) {
+                WheelPos -= 85;
+                c[0]=255 - WheelPos * 3;
+                c[1]=0;
+                c[2]=WheelPos * 3;
+            } else {
+                WheelPos -= 170;
+                c[0]=0;
+                c[1]=WheelPos * 3;
+                c[2]=255 - WheelPos * 3;
+            }
+            return c;
+        }
         
 };
