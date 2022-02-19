@@ -1,3 +1,6 @@
+enum Hintergrund {rainbow_plasma, rainbow_stripe};
+enum Sprite {none, smiley};
+
 template<uint8_t LED_PIN>
 class Matrix {
 
@@ -18,7 +21,7 @@ class Matrix {
     uint8_t secondsTrigger = 0;
 
     // sprites
-    uint8_t sprite = 4;
+    // uint8_t sprite = 4;
     // Smiley
     const uint8_t SpriteSmileyData[480] = {
     // Frame 1 done
@@ -175,64 +178,58 @@ class Matrix {
 
     cLEDMatrix<MATRIX_WIDTH, MATRIX_HEIGHT, MATRIX_TYPE> leds;
 
+
     public:
+
         Matrix():Sprites(&leds){
             this->setup();
         };
 
-        void loop(){
+        void loop(Hintergrund hintergrund, Sprite sprite){
 
             EVERY_N_SECONDS(1) {
                 seconds++;
             }
 
-            plasma();
+            switch (hintergrund){
+                case rainbow_plasma:
+                    plasma();
+                    break;
+                case rainbow_stripe:
+                    stripedRainbow();
+                    break;
+            }
 
             if(seconds % 7 == 0 && secondsTrigger != seconds) {
                 secondsTrigger = seconds;
                 Sprites.RemoveAllSprites();
-                sprite = 0; //= ++sprite % 6;
+                //sprite = 0; //= ++sprite % 6;
                 switch (sprite){
-                    case 0:
+                    case none:
+                        // nothing
+                        break;
+                    case smiley:
                         setupSmiley();
                         break;
-                    case 1:
-                        // Do nothing
-                        setupSmiley();
-                        break;
-                    case 2:
-                        // setupInvader();
-                        // setupInvader3();
-                        setupSmiley();
-                        break;
-                    case 3:
-                        // Do nothing
-                        setupSmiley();
-                        break;
-                    case 4:
-                        // setupAlien();
-                        setupSmiley();
-                        break;
-                    case 5:
-                        // Do nothing
-                        setupSmiley();
-                        break;
+                    // case 2:
+                    //     // setupInvader();
+                    //     // setupInvader3();
+                    //     break;
+                    // case 3:
+                    //     // Do nothing
+                    //     break;
+                    // case 4:
+                    //     // setupAlien();
+                    //     break;
+                    // case 5:
+                    //     // Do nothing
+                    //     break;
                 }
             }
 
             Sprites.UpdateSprites();
             Sprites.RenderSprites();
             
-            FastLED.show();
-            delay(10);
-        }
-
-        void stripedRainbow() {
-            // Rainbow background
-            uint32_t ms = millis();
-            int32_t yHueDelta32 = ((int32_t)cos16( ms * 27 ) * (350 / leds.Width()));
-            int32_t xHueDelta32 = ((int32_t)cos16( ms * 39 ) * (310 / leds.Height()));
-            DrawOneFrame( ms / 65536, yHueDelta32 / 32768, xHueDelta32 / 32768);
             FastLED.show();
             delay(10);
         }
@@ -279,6 +276,16 @@ class Matrix {
             PlasmaTime += PlasmaShift;
             if (OldPlasmaTime > PlasmaTime)
             PlasmaShift = (random8(0, 5) * 32) + 64;
+            // FastLED.show();
+            // delay(10);
+        }
+
+        // striped Rainbow background
+        void stripedRainbow() {
+            uint32_t ms = millis();
+            int32_t yHueDelta32 = ((int32_t)cos16( ms * 27 ) * (350 / leds.Width()));
+            int32_t xHueDelta32 = ((int32_t)cos16( ms * 39 ) * (310 / leds.Height()));
+            DrawOneFrame( ms / 65536, yHueDelta32 / 32768, xHueDelta32 / 32768);
             // FastLED.show();
             // delay(10);
         }
