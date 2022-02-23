@@ -9,21 +9,24 @@
 #include "Matrix.h"
 
 
-#define LED_PIN_Rohr_1 27
-#define LED_PIN_Rohr_2 32
-#define LED_PIN_Unterboden 25
-#define LED_PIN_Matrix_1 33
+#define LED_PIN_Rohr_1 25
+#define LED_PIN_Rohr_2 26
+#define LED_PIN_Unterboden 27
+#define LED_PIN_Matrix_1 12
+#define LED_PIN_Matrix_2 14
+
+
 #define NUM_LEDS_Rohr_1 33
 #define NUM_LEDS_Rohr_2 33
 #define NUM_LEDS_Unterboden 64
 
-#define PIN_Toggle_Switch_1 18
-#define PIN_Toggle_Switch_2 19
-#define PIN_Toggle_Switch_3 21
+#define PIN_Toggle_Switch_1 15
+#define PIN_Toggle_Switch_2 2
+#define PIN_Toggle_Switch_3 4
 
-#define PIN_Modus_Switch_1 15
-#define PIN_Modus_Switch_2 2
-#define PIN_Modus_Switch_3 4
+#define PIN_Modus_Switch_1 18
+#define PIN_Modus_Switch_2 19
+#define PIN_Modus_Switch_3 21
 
 boolean Toggle_Switch_1 = false;
 boolean Toggle_Switch_2 = false;
@@ -43,12 +46,14 @@ void Thread1(void *);
 void Thread2(void *);
 void Thread3(void *);
 void Thread4(void *);
+void Thread5(void *);
 
 // Instanzen der Klassen erstellen
 auto rohr1 = new Dosenrohr<LED_PIN_Rohr_1, NUM_LEDS_Rohr_1>();
 auto rohr2 = new Dosenrohr<LED_PIN_Rohr_2, NUM_LEDS_Rohr_2>();
 auto unterboden = new Unterboden<LED_PIN_Unterboden, NUM_LEDS_Unterboden>();
 auto matrix1 = new Matrix<LED_PIN_Matrix_1>();
+auto matrix2 = new Matrix<LED_PIN_Matrix_2>();
 
 // Dosenrohr<LED_PIN_Rohr_2, NUM_LEDS_Rohr_2> rohr2;
 // // Dosenrohr<LED_PIN_Rohr_3, NUM_LEDS_Rohr_3> rohr3 = Dosenrohr<LED_PIN_Rohr_3, NUM_LEDS_Rohr_3>();
@@ -86,7 +91,7 @@ void setup () {
     "Task 1",        // Name of the task (for debugging)
     1500,            // Stack size (bytes)
     NULL,            // Parameter to pass
-    2,               // Task priority
+    3,               // Task priority
     NULL             // Task handle
   );
   
@@ -116,6 +121,15 @@ void setup () {
     3,               // Task priority
     NULL             // Task handle
   ); 
+
+  xTaskCreate(
+    Thread5,         // Function that should be called
+    "Task 5",        // Name of the task (for debugging)
+    6000,            // Stack size (bytes)
+    NULL,            // Parameter to pass
+    3,               // Task priority
+    NULL             // Task handle
+  ); 
 }
 
 
@@ -130,9 +144,9 @@ void Thread0(void * parameter){
     Toggle_Switch_2 = digitalRead(PIN_Toggle_Switch_2);
     Toggle_Switch_3 = digitalRead(PIN_Toggle_Switch_3);
 
-    Modus_Switch_1 = digitalRead(PIN_Toggle_Switch_1);
-    Modus_Switch_2 = digitalRead(PIN_Toggle_Switch_2);
-    Modus_Switch_3 = digitalRead(PIN_Toggle_Switch_3);
+    Modus_Switch_1 = digitalRead(PIN_Modus_Switch_1);
+    Modus_Switch_2 = digitalRead(PIN_Modus_Switch_2);
+    Modus_Switch_3 = digitalRead(PIN_Modus_Switch_3);
 
     delay(10);
     
@@ -141,21 +155,22 @@ void Thread0(void * parameter){
 
 void Thread1(void* parameter){
   for(;;){
-    if(Toggle_Switch_1){
+    if(!Toggle_Switch_1){
       if(Modus_Switch_1){
 
-        // unterboden->dualColorRangeRotation();
-        delay(10);
+        unterboden->regenbogen_cycle(20);
+        // delay(10);
         
       } else {
         
-        // unterboden->regenbogen(20);
-        delay(10);
+        unterboden->dualColorRangeRotation();
+        // delay(10);
 
       }
     } else {
 
-      delay(10);
+      unterboden->clear();
+      // delay(10);
 
     }
   }
@@ -177,7 +192,8 @@ void Thread2(void* parameter){
       }
     } else {
 
-      delay(10);
+      rohr1->clear();
+      // delay(10);
 
     }
   }
@@ -199,7 +215,8 @@ void Thread3(void* parameter){
       }
     } else {
 
-      delay(10);
+      rohr2->clear();
+      // delay(10);
 
     }
   }
@@ -219,7 +236,29 @@ void Thread4(void* parameter){
       }
     } else {
 
-      delay(10);
+      matrix1->clear();
+      // delay(10);
+
+    }
+  }
+}
+
+void Thread5(void* parameter){
+  for(;;){
+    if(Toggle_Switch_3){
+      if(Modus_Switch_3){
+
+        matrix2->loop(rainbow_plasma, smiley);
+
+      } else {
+
+        matrix2->loop(rainbow_stripe, smiley);
+        
+      }
+    } else {
+
+      matrix1->clear();
+      // delay(10);
 
     }
   }

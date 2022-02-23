@@ -234,6 +234,18 @@ class Matrix {
             delay(10);
         }
 
+        void clear(){
+            for (int16_t x=0; x<leds.Width(); x++)
+            {
+                for (int16_t y=0; y<leds.Height(); y++)
+                {
+                    leds(x, y) = CRGB::Black;
+                }
+            }
+            FastLED.show();
+            delay(10);
+        }
+
 
     private:
         void setup() {

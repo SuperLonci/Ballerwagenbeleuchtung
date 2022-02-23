@@ -181,18 +181,20 @@ class Dosenrohr {
             }
         }
 
-
-    private:
-        void setup(){
-            leds = new CRGB[NUM_LEDS];
-            FastLED.addLeds<NEOPIXEL, LED_PIN>(leds, NUM_LEDS);
-        }
-
         void clear(){
             for (int i = 0; i < NUM_LEDS; i++)
             {
                 leds[i] = CRGB::Black;
             }
+            FastLED.show();
+            delay(10);
+        }
+
+
+    private:
+        void setup(){
+            leds = new CRGB[NUM_LEDS];
+            FastLED.addLeds<NEOPIXEL, LED_PIN>(leds, NUM_LEDS);
         }
 
         void setAll(byte red, byte green, byte blue) {

@@ -5,6 +5,7 @@ class Unterboden {
     
     long currentPixelHue = 0;
     int offset = NUM_LEDS / 2;
+    int regenbogen_offset = 0;
 
     public:
         
@@ -78,22 +79,30 @@ class Unterboden {
         void regenbogen_cycle(int SpeedDelay){
             byte *c;
             uint16_t i, j;
+      
+            for(i=0; i< NUM_LEDS; i++) {
+                c=Wheel(((i * 256 / NUM_LEDS) + regenbogen_offset) & 255);
+                // setPixel(i, *c, *(c+1), *(c+2));
+                leds[i].r = *c;
+                leds[i].g = *(c+1);
+                leds[i].b = *(c+2);
+            }
+            FastLED.show();
+            delay(SpeedDelay);
 
-            for(j=0; j<256*5; j++) { // 5 cycles of all colors on wheel
-                for(i=0; i< NUM_LEDS; i++) {
-                    c=Wheel(((i * 256 / NUM_LEDS) + j) & 255);
-                    // setPixel(i, *c, *(c+1), *(c+2));
-                    leds[i].r = *c;
-                    leds[i].g = *(c+1);
-                    leds[i].b = *(c+2);
-                }
-                FastLED.show();
-                delay(SpeedDelay);
+            regenbogen_offset++;
+            if (regenbogen_offset>=256*5){
+                regenbogen_offset = 0;
             }
         }
 
-        void regenbogen(int SpeedDelay){
-            //tbw
+        void clear(){
+            for (int i = 0; i < NUM_LEDS; i++)
+            {
+                leds[i] = CRGB::Black;
+            }
+            FastLED.show();
+            delay(10);
         }
 
 
