@@ -2,6 +2,8 @@
 #include <FastLED.h>
 #include <LEDMatrix.h>
 #include <LEDSprites.h>
+#include <LEDText.h>
+#include <FontMatrise.h>
 #include <Adafruit_I2CDevice.h>
 #include <Adafruit_GFX.h>
 #include "Dosenrohr.h"
@@ -9,16 +11,16 @@
 #include "Matrix.h"
 
 
-#define LED_PIN_Rohr_1 25
-#define LED_PIN_Rohr_2 26
-#define LED_PIN_Unterboden 27
-#define LED_PIN_Matrix_1 12
+#define LED_PIN_Rohr_1 26
+#define LED_PIN_Rohr_2 25
+#define LED_PIN_Unterboden 27 //27
+#define LED_PIN_Matrix_1 12 //12
 #define LED_PIN_Matrix_2 14
 
 
 #define NUM_LEDS_Rohr_1 33
 #define NUM_LEDS_Rohr_2 33
-#define NUM_LEDS_Unterboden 64
+#define NUM_LEDS_Unterboden 128
 
 #define PIN_Toggle_Switch_1 15
 #define PIN_Toggle_Switch_2 2
@@ -73,14 +75,14 @@ void setup () {
   pinMode(PIN_Modus_Switch_2, INPUT);
   pinMode(PIN_Modus_Switch_3, INPUT);
 
-  FastLED.setBrightness(32);
+  FastLED.setBrightness(192);
   FastLED.clear(true);
   FastLED.show();
 
    xTaskCreate(
     Thread0,         // Function that should be called
     "Task 0",        // Name of the task (for debugging)
-    1500,            // Stack size (bytes)
+    1000,            // Stack size (bytes)
     NULL,            // Parameter to pass
     1,               // Task priority
     NULL             // Task handle
@@ -89,7 +91,7 @@ void setup () {
   xTaskCreate(
     Thread1,         // Function that should be called
     "Task 1",        // Name of the task (for debugging)
-    1500,            // Stack size (bytes)
+    6000,            // Stack size (bytes)
     NULL,            // Parameter to pass
     3,               // Task priority
     NULL             // Task handle
@@ -98,7 +100,7 @@ void setup () {
     xTaskCreate(
     Thread2,         // Function that should be called
     "Task 2",        // Name of the task (for debugging)
-    1500,            // Stack size (bytes)
+    3000,            // Stack size (bytes)
     NULL,            // Parameter to pass
     3,               // Task priority
     NULL             // Task handle
@@ -107,7 +109,7 @@ void setup () {
   xTaskCreate(
     Thread3,         // Function that should be called
     "Task 3",        // Name of the task (for debugging)
-    1500,            // Stack size (bytes)
+    3000,            // Stack size (bytes)
     NULL,            // Parameter to pass
     3,               // Task priority
     NULL             // Task handle
@@ -159,11 +161,13 @@ void Thread1(void* parameter){
       if(Modus_Switch_1){
 
         unterboden->regenbogen_cycle(20);
+        // unterboden->dualColorRangeRotation();
         // delay(10);
         
       } else {
         
-        unterboden->dualColorRangeRotation();
+        unterboden->regenbogen_cycle(20);
+        // unterboden->dualColorRangeRotation();
         // delay(10);
 
       }
@@ -183,11 +187,13 @@ void Thread2(void* parameter){
 
         // rohr1->shine();
         // rohr1->runningLightGroup(0xff, 0, 0, 50);
-        rohr1->acceleration();
+        // rohr1->acceleration();
+        rohr1->meteorRain(0xff,0xff,0xff,10, 64, true, 30);
 
       } else {
 
-        rohr1->Fire(55,120,15);
+        // rohr1->Fire(55,120,15);
+        rohr1->meteorRain(0xff,0xff,0xff,10, 64, true, 30);
 
       }
     } else {
@@ -206,7 +212,8 @@ void Thread3(void* parameter){
 
         // rohr2->shine();
         // rohr2->bouncingColoredBalls(3, colors);
-        rohr2->acceleration();
+        // rohr2->acceleration();
+        rohr2->meteorRain(0xff,0xff,0xff,10, 64, true, 30);
 
       } else {
 
@@ -227,11 +234,11 @@ void Thread4(void* parameter){
     if(Toggle_Switch_3){
       if(Modus_Switch_3){
 
-        matrix1->loop(rainbow_plasma, smiley);
+        matrix1->loop(rainbow_stripe, smiley);
 
       } else {
-
-        matrix1->loop(rainbow_stripe, smiley);
+        
+        matrix1->loop(rainbow_plasma, smiley);
         
       }
     } else {

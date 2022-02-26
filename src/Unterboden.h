@@ -46,29 +46,29 @@ class Unterboden {
             // while (offset < NUM_LEDS){
             //     while (currentPixelHue < 65536){
 
-                    for (int i = 0; i < NUM_LEDS; i++) {
-                        leds[i] = CRGB::OrangeRed; //currentPixelHue; //CHSV(currentPixelHue,255,64) //HSVHue::HUE_GREEN; // currentPixelHue;
+            for (int i = 0; i < NUM_LEDS; i++) {
+                leds[i] = CRGB::Red; //currentPixelHue; //CHSV(currentPixelHue,255,64) //HSVHue::HUE_GREEN; // currentPixelHue;
 
-                        // strip.setPixelColor(i, strip.gamma32(strip.ColorHSV(currentPixelHue)));
+                // strip.setPixelColor(i, strip.gamma32(strip.ColorHSV(currentPixelHue)));
 
-                    }
+            }
 
-                    for (int i = 0; i < NUM_LEDS / 2; i++) {
-                        int pos = i + offset;
+            for (int i = 0; i < NUM_LEDS / 2; i++) {
+                int pos = i + offset;
 
-                        if (pos >= NUM_LEDS)
-                        pos = (i + offset) - NUM_LEDS;
+                if (pos >= NUM_LEDS)
+                pos = (i + offset) - NUM_LEDS;
 
-                        leds[pos] = CRGB::GreenYellow; //(currentPixelHue + 65536 / 2) % 65536;
+                leds[pos] = CRGB::Green; //(currentPixelHue + 65536 / 2) % 65536;
 
-                        // strip.setPixelColor(pos, strip.gamma32(strip.ColorHSV((currentPixelHue + 65536 / 2) % 65536)));
-                        // strip.setPixelColor(pos, strip.gamma32(strip.ColorHSV(65536 - currentPixelHue))); //alt idk
-                    }
+                // strip.setPixelColor(pos, strip.gamma32(strip.ColorHSV((currentPixelHue + 65536 / 2) % 65536)));
+                // strip.setPixelColor(pos, strip.gamma32(strip.ColorHSV(65536 - currentPixelHue))); //alt idk
+            }
 
-                    FastLED.show();
-                    delay(100);
-                    currentPixelHue += 64;
-                    offset++;
+            currentPixelHue += 64;
+            offset++;
+            FastLED.show();
+            delay(100);
 
             //     }
             //     currentPixelHue = 0;
@@ -81,7 +81,7 @@ class Unterboden {
             uint16_t i, j;
       
             for(i=0; i< NUM_LEDS; i++) {
-                c=Wheel(((i * 256 / NUM_LEDS) + regenbogen_offset) & 255);
+                c=Wheel(((i * 200 / NUM_LEDS) + regenbogen_offset) & 255);
                 // setPixel(i, *c, *(c+1), *(c+2));
                 leds[i].r = *c;
                 leds[i].g = *(c+1);
@@ -94,6 +94,7 @@ class Unterboden {
             if (regenbogen_offset>=256*5){
                 regenbogen_offset = 0;
             }
+            delay(10);
         }
 
         void clear(){

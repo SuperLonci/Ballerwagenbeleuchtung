@@ -1,5 +1,5 @@
 enum Hintergrund {rainbow_plasma, rainbow_stripe};
-enum Sprite {none, smiley};
+enum Sprite {none, smiley, halbe_dinger, mixed};
 
 template<uint8_t LED_PIN>
 class Matrix {
@@ -16,6 +16,9 @@ class Matrix {
 
     uint16_t PlasmaTime, PlasmaShift;
     uint8_t plasmaLowHue, plasmaHighHue, plasmaBrightness;
+
+    cLEDText ScrollingMsg;
+    unsigned char txtMenu[12];
 
     uint8_t seconds = 0;
     uint8_t secondsTrigger = 0;
@@ -200,7 +203,7 @@ class Matrix {
                     break;
             }
 
-            if(seconds % 7 == 0 && secondsTrigger != seconds) {
+            if(seconds % 21 == 0 && secondsTrigger != seconds) { //7
                 secondsTrigger = seconds;
                 Sprites.RemoveAllSprites();
                 //sprite = 0; //= ++sprite % 6;
@@ -210,14 +213,15 @@ class Matrix {
                         break;
                     case smiley:
                         setupSmiley();
+                        // setupText();
                         break;
-                    // case 2:
-                    //     // setupInvader();
-                    //     // setupInvader3();
-                    //     break;
-                    // case 3:
-                    //     // Do nothing
-                    //     break;
+                    case halbe_dinger:
+                        // setupInvader();
+                        // setupInvader3();
+                        break;
+                    case mixed:
+                        // Do nothing
+                        break;
                     // case 4:
                     //     // setupAlien();
                     //     break;
@@ -311,4 +315,17 @@ class Matrix {
             sprSmiley.SetMotion(1,15,0,0);
             Sprites.AddSprite(&sprSmiley);
         }
+
+        // void setupText() {
+        //     ScrollingMsg.SetFont(MatriseFontData);
+        //     ScrollingMsg.Init(&leds, leds.Width(), ScrollingMsg.FontHeight() + 1, 0, 5);
+        //     ScrollingMsg.SetBackgroundMode(BACKGND_ERASE);
+        //     ScrollingMsg.SetScrollDirection(SCROLL_LEFT);
+        //     ScrollingMsg.SetFrameRate(5);
+        //     ScrollingMsg.SetTextColrOptions(COLR_RGB | COLR_SINGLE, 0xff, 0x00, 0xff);
+        //     sprintf((char *)txtMenu, "Halbe Dinger Rollen nicht!");
+        //     ScrollingMsg.SetText((unsigned char *)txtMenu, sizeof(txtMenu)-1);
+        //     ScrollingMsg.UpdateText();
+        //     FastLED.show();
+        // }
 };

@@ -179,6 +179,7 @@ class Dosenrohr {
                 FastLED.show();
                 delay(SpeedDelay);
             }
+            delay(10);
         }
 
         void clear(){
