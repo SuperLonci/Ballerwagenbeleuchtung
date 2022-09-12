@@ -2,6 +2,7 @@ template<uint8_t LED_PIN, int NUM_LEDS>
 class Unterboden {
 
     CRGB* leds;
+    CLEDController* controller;
     
     long currentPixelHue = 0;
     int offset = NUM_LEDS / 2;
@@ -22,7 +23,7 @@ class Unterboden {
                 if (i > 3){
                     leds[i-4] = CRGB::Black;
                 }
-                FastLED.show();
+                controller->showLeds();
             }
             // FastLED.clear();
             for (int i = 0; i < NUM_LEDS; i++)
@@ -67,7 +68,7 @@ class Unterboden {
 
             currentPixelHue += 64;
             offset++;
-            FastLED.show();
+            controller->showLeds();
             delay(100);
 
             //     }
@@ -87,11 +88,11 @@ class Unterboden {
                 leds[i].g = *(c+1);
                 leds[i].b = *(c+2);
             }
-            FastLED.show();
+            controller->showLeds();
             delay(SpeedDelay);
 
             regenbogen_offset++;
-            if (regenbogen_offset>=256*5){
+            if (regenbogen_offset>=256){
                 regenbogen_offset = 0;
             }
             delay(10);
@@ -102,7 +103,7 @@ class Unterboden {
             {
                 leds[i] = CRGB::Black;
             }
-            FastLED.show();
+            controller->showLeds();
             delay(10);
         }
 
@@ -110,7 +111,7 @@ class Unterboden {
     private:
         void setup(){
                 leds = new CRGB[NUM_LEDS];
-                FastLED.addLeds<NEOPIXEL, LED_PIN>(leds, NUM_LEDS);
+                controller = &FastLED.addLeds<NEOPIXEL, LED_PIN>(leds, NUM_LEDS);
             }
 
         byte * Wheel(byte WheelPos) {

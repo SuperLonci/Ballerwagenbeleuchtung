@@ -2,6 +2,7 @@ template<uint8_t LED_PIN, int NUM_LEDS>
 class Dosenrohr {
 
     CRGB* leds;
+    CLEDController* controller;
 
     public:
         
@@ -18,7 +19,7 @@ class Dosenrohr {
                 if (i > 3){
                     leds[i-4] = CRGB::Black;
                 }
-                FastLED.show();
+                controller->showLeds();
             }
             // FastLED.clear();
             clear();
@@ -31,7 +32,7 @@ class Dosenrohr {
             {
                 leds[i] = CRGB::Green;
             }
-            FastLED.show();
+            controller->showLeds();
             delay(500);
             // for blink
             // clear();
@@ -83,7 +84,7 @@ class Dosenrohr {
                     leds[Position[i]].b = colors[i][2];
                 }
             
-                FastLED.show();
+                controller->showLeds();
                 // strip.show();
                 // setAll(0,0,0);
                 // FastLED.clear();
@@ -110,7 +111,7 @@ class Dosenrohr {
                     leds[i].b = ((sin(i+Position) * 127 + 128)/255)*blue;
                 }
                 
-                FastLED.show();
+                controller->showLeds();
                 delay(WaveDelay);
             }
         }
@@ -148,7 +149,7 @@ class Dosenrohr {
                 setPixelHeatColor(j, heat[j] );
             }
 
-            FastLED.show();
+            controller->showLeds();
             delay(SpeedDelay);
         }
 
@@ -176,7 +177,7 @@ class Dosenrohr {
                     }
                 }
             
-                FastLED.show();
+                controller->showLeds();
                 delay(SpeedDelay);
             }
             delay(10);
@@ -187,7 +188,7 @@ class Dosenrohr {
             {
                 leds[i] = CRGB::Black;
             }
-            FastLED.show();
+            controller->showLeds();
             delay(10);
         }
 
@@ -195,7 +196,7 @@ class Dosenrohr {
     private:
         void setup(){
             leds = new CRGB[NUM_LEDS];
-            FastLED.addLeds<NEOPIXEL, LED_PIN>(leds, NUM_LEDS);
+            controller = &FastLED.addLeds<NEOPIXEL, LED_PIN>(leds, NUM_LEDS);
         }
 
         void setAll(byte red, byte green, byte blue) {
@@ -204,7 +205,7 @@ class Dosenrohr {
                 leds[i].g = green;
                 leds[i].b = blue;
             }
-            FastLED.show();
+            controller->showLeds();
         }
 
         void setPixelHeatColor (int Pixel, byte temperature) {

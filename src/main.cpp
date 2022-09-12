@@ -76,67 +76,77 @@ void setup () {
   pinMode(PIN_Modus_Switch_3, INPUT);
 
   FastLED.setBrightness(192);
-  FastLED.clear(true);
-  FastLED.show();
 
-   xTaskCreate(
+  // Schalterstatus auslesen
+  xTaskCreatePinnedToCore(
     Thread0,         // Function that should be called
     "Task 0",        // Name of the task (for debugging)
-    1000,            // Stack size (bytes)
+    2048,            // Stack size (bytes)
     NULL,            // Parameter to pass
-    1,               // Task priority
-    NULL             // Task handle
+    3,               // Task priority
+    NULL,            // Task handle
+    1                // Core
   );
 
-  xTaskCreate(
+  // Unterboden
+  xTaskCreatePinnedToCore(
     Thread1,         // Function that should be called
     "Task 1",        // Name of the task (for debugging)
-    6000,            // Stack size (bytes)
+    2048,            // Stack size (bytes)
     NULL,            // Parameter to pass
     3,               // Task priority
-    NULL             // Task handle
+    NULL,            // Task handle
+    1                // Core
   );
   
-    xTaskCreate(
+  // Dosenrohr 1
+  xTaskCreatePinnedToCore(
     Thread2,         // Function that should be called
     "Task 2",        // Name of the task (for debugging)
-    3000,            // Stack size (bytes)
+    2048,            // Stack size (bytes)
     NULL,            // Parameter to pass
     3,               // Task priority
-    NULL             // Task handle
+    NULL,            // Task handle
+    1                // Core
   );
 
-  xTaskCreate(
+  // Dosenrohr 2
+  xTaskCreatePinnedToCore(
     Thread3,         // Function that should be called
     "Task 3",        // Name of the task (for debugging)
-    3000,            // Stack size (bytes)
+    2048,            // Stack size (bytes)
     NULL,            // Parameter to pass
     3,               // Task priority
-    NULL             // Task handle
+    NULL,            // Task handle
+    1                // Core
   ); 
 
-  xTaskCreate(
+  // Matrix 1
+  xTaskCreatePinnedToCore(
     Thread4,         // Function that should be called
     "Task 4",        // Name of the task (for debugging)
-    6000,            // Stack size (bytes)
+    2048,            // Stack size (bytes)
     NULL,            // Parameter to pass
     3,               // Task priority
-    NULL             // Task handle
+    NULL,            // Task handle
+    1                // Core
   ); 
 
-  xTaskCreate(
+  // Matrix 2
+  xTaskCreatePinnedToCore(
     Thread5,         // Function that should be called
     "Task 5",        // Name of the task (for debugging)
-    6000,            // Stack size (bytes)
+    2048,            // Stack size (bytes)
     NULL,            // Parameter to pass
     3,               // Task priority
-    NULL             // Task handle
-  ); 
+    NULL,            // Task handle
+    1                // Core
+  );
 }
 
 
 void loop () {
-
+  
 }
 
 void Thread0(void * parameter){

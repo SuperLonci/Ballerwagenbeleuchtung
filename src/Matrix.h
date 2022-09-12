@@ -180,6 +180,7 @@ class Matrix {
 
 
     cLEDMatrix<MATRIX_WIDTH, MATRIX_HEIGHT, MATRIX_TYPE> leds;
+    CLEDController* controller;
 
 
     public:
@@ -234,7 +235,7 @@ class Matrix {
             Sprites.UpdateSprites();
             Sprites.RenderSprites();
             
-            FastLED.show();
+            controller->showLeds();
             delay(10);
         }
 
@@ -246,7 +247,7 @@ class Matrix {
                     leds(x, y) = CRGB::Black;
                 }
             }
-            FastLED.show();
+            controller->showLeds();
             delay(10);
         }
 
@@ -260,7 +261,7 @@ class Matrix {
             plasmaHighHue = 150;
             plasmaBrightness = 200;
 
-            FastLED.addLeds<CHIPSET, LED_PIN, COLOR_ORDER>(leds[0], leds.Size());
+            controller = &FastLED.addLeds<CHIPSET, LED_PIN, COLOR_ORDER>(leds[0], leds.Size());
 
         }
 
