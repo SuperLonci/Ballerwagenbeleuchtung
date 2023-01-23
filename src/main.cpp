@@ -1,4 +1,5 @@
 #include <Arduino.h>
+#include <tgx.h>
 #include <FastLED.h>
 #include <LEDMatrix.h>
 #include <LEDSprites.h>
@@ -75,7 +76,7 @@ void setup () {
   pinMode(PIN_Modus_Switch_2, INPUT);
   pinMode(PIN_Modus_Switch_3, INPUT);
 
-  FastLED.setBrightness(192);
+  FastLED.setBrightness(2);
 
   // Schalterstatus auslesen
   xTaskCreatePinnedToCore(
@@ -125,7 +126,7 @@ void setup () {
   xTaskCreatePinnedToCore(
     Thread4,         // Function that should be called
     "Task 4",        // Name of the task (for debugging)
-    2048,            // Stack size (bytes)
+    4096 * 16,            // Stack size (bytes)
     NULL,            // Parameter to pass
     3,               // Task priority
     NULL,            // Task handle
@@ -136,7 +137,7 @@ void setup () {
   xTaskCreatePinnedToCore(
     Thread5,         // Function that should be called
     "Task 5",        // Name of the task (for debugging)
-    2048,            // Stack size (bytes)
+    4096 * 16,            // Stack size (bytes)
     NULL,            // Parameter to pass
     3,               // Task priority
     NULL,            // Task handle
@@ -244,11 +245,11 @@ void Thread4(void* parameter){
     if(Toggle_Switch_3){
       if(Modus_Switch_3){
 
-        matrix1->loop(rainbow_stripe, smiley);
+        matrix1->loop();
 
       } else {
         
-        matrix1->loop(rainbow_plasma, smiley);
+        matrix1->loop();
         
       }
     } else {
@@ -265,11 +266,11 @@ void Thread5(void* parameter){
     if(Toggle_Switch_3){
       if(Modus_Switch_3){
 
-        matrix2->loop(rainbow_plasma, smiley);
+        matrix2->loop();
 
       } else {
 
-        matrix2->loop(rainbow_stripe, smiley);
+        matrix2->loop();
         
       }
     } else {

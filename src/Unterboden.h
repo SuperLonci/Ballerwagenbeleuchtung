@@ -88,7 +88,7 @@ class Unterboden {
                 leds[i].g = *(c+1);
                 leds[i].b = *(c+2);
             }
-            controller->showLeds();
+            controller->showLeds(15);
             delay(SpeedDelay);
 
             regenbogen_offset++;
@@ -103,7 +103,7 @@ class Unterboden {
             {
                 leds[i] = CRGB::Black;
             }
-            controller->showLeds();
+            controller->showLeds(15);
             delay(10);
         }
 
